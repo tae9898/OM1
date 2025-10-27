@@ -51,6 +51,7 @@ class IOProvider:
         self._llm_prompt: Optional[str] = None
         self._llm_start_time: Optional[float] = None
         self._llm_end_time: Optional[float] = None
+        self._llm_error_message: Optional[str] = None
 
         self._mode_transition_input: Optional[str] = None
 
@@ -324,6 +325,22 @@ class IOProvider:
         """
         with self._lock:
             self._llm_end_time = value
+
+    @property
+    def llm_error_message(self) -> Optional[str]:
+        """
+        Get the LLM error message.
+        """
+        with self._lock:
+            return self._llm_error_message
+
+    @llm_error_message.setter
+    def llm_error_message(self, value: Optional[str]) -> None:
+        """
+        Set the LLM error message.
+        """
+        with self._lock:
+            self._llm_error_message = value
 
     def add_dynamic_variable(self, key: str, value: Any) -> None:
         """

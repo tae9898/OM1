@@ -82,6 +82,7 @@ class OpenAILLM(LLM[R]):
             parsing fails.
         """
         try:
+            self.io_provider.llm_error_message = None # Clear previous error message
             logging.info(f"OpenAI LLM input: {prompt}")
             logging.debug(f"OpenAI LLM messages: {messages}")
 
@@ -128,5 +129,7 @@ class OpenAILLM(LLM[R]):
             return None
 
         except Exception as e:
-            logging.error(f"OpenAI API error: {e}")
+            error_message = f"OpenAI API error: {e}"
+            logging.error(error_message)
+            self.io_provider.llm_error_message = error_message
             return None

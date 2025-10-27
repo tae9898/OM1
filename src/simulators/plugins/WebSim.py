@@ -266,7 +266,9 @@ class WebSim(Simulator):
                                 };
 
                                 ws.onmessage = (event) => {
+                                    console.log('WebSocket message received:', event.data);
                                     const data = JSON.parse(event.data);
+                                    console.log('Parsed state data:', data);
                                     setState(data);
                                 };
 
@@ -386,6 +388,12 @@ class WebSim(Simulator):
 
                                             {/* Main Display */}
                                             <div className="flex-1 ml-4">
+                                                {state.llm_error_message && (
+                                                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                                                        <strong className="font-bold">LLM Error:</strong>
+                                                        <span className="block sm:inline"> {state.llm_error_message}</span>
+                                                    </div>
+                                                )}
                                                 <div className="bg-white rounded-lg shadow p-4 mb-4">
                                                     <h2 className="text-xl font-bold mb-4">Current State</h2>
                                                     <div className="space-y-4">
@@ -403,6 +411,7 @@ class WebSim(Simulator):
                                                             <span className="font-semibold">Emotion:</span>
                                                             <span className="ml-2 text-purple-600">{state.current_emotion}</span>
                                                         </div>
+
                                                     </div>
                                                 </div>
 
@@ -652,19 +661,22 @@ class WebSim(Simulator):
                             self.state.current_emotion = new_emotion
                             updated = True
 
+
+
                 self.state_dict = {
                     "current_action": self.state.current_action,
                     "last_speech": self.state.last_speech,
                     "current_emotion": self.state.current_emotion,
                     "system_latency": system_latency,
                     "inputs": input_rezeroed,
+                    "llm_error_message": self.io_provider.llm_error_message, # Added
                 }
 
-                logging.info(f"Inputs and LLM Outputs: {self.state_dict}")
+                # Placeholder for OM1 credit logic
+                # self.state.om1_credit = "1000" # Example default value
 
-            if updated:
-                self._last_tick = 0
-                self.tick()
+            # Always call tick to broadcast the latest state, even if no actions updated
+            self.tick()
 
         except Exception as e:
             logging.error(f"Error in sim update: {e}")
