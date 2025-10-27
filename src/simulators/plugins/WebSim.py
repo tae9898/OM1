@@ -672,9 +672,6 @@ class WebSim(Simulator):
                     "llm_error_message": self.io_provider.llm_error_message, # Added
                 }
 
-                # Placeholder for OM1 credit logic
-                # self.state.om1_credit = "1000" # Example default value
-
             # Always call tick to broadcast the latest state, even if no actions updated
             self.tick()
 
