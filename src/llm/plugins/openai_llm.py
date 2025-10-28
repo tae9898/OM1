@@ -1,4 +1,5 @@
 import logging
+import re
 import time
 import typing as T
 
@@ -129,7 +130,8 @@ class OpenAILLM(LLM[R]):
             return None
 
         except Exception as e:
-            error_message = f"OpenAI API error: {e}"
+            sanitized = re.sub(r'(sk-|hf_|ghp_|AIza|om1_live_)[a-zA-Z0-9]{20,}', '[REDACTED]', str(e))
+            error_message = f"OpenAI API error: {sanitized}"
             logging.error(error_message)
             self.io_provider.llm_error_message = error_message
             return None
