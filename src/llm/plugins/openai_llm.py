@@ -83,12 +83,12 @@ class OpenAILLM(LLM[R]):
             parsing fails.
         """
         try:
-            self.io_provider.llm_error_message = None # Clear previous error message
             logging.info(f"OpenAI LLM input: {prompt}")
             logging.debug(f"OpenAI LLM messages: {messages}")
 
             self.io_provider.llm_start_time = time.time()
             self.io_provider.set_llm_prompt(prompt)
+            self.io_provider.llm_error_message = None # Clear previous error message
 
             formatted_messages = [
                 {"role": msg.get("role", "user"), "content": msg.get("content", "")}

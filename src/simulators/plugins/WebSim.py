@@ -411,7 +411,6 @@ class WebSim(Simulator):
                                                             <span className="font-semibold">Emotion:</span>
                                                             <span className="ml-2 text-purple-600">{state.current_emotion}</span>
                                                         </div>
-
                                                     </div>
                                                 </div>
 
@@ -661,8 +660,6 @@ class WebSim(Simulator):
                             self.state.current_emotion = new_emotion
                             updated = True
 
-
-
                 self.state_dict = {
                     "current_action": self.state.current_action,
                     "last_speech": self.state.last_speech,
@@ -672,7 +669,6 @@ class WebSim(Simulator):
                     "llm_error_message": self.io_provider.llm_error_message, # Added
                 }
 
-            # Always call tick to broadcast the latest state, even if no actions updated
             self.tick()
 
         except Exception as e:
