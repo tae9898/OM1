@@ -87,7 +87,7 @@ class OpenAILLM(LLM[R]):
         try:
             self.io_provider.llm_start_time = time.time()
             self.io_provider.set_llm_prompt(prompt)
-            self.io_provider.llm_error_message = None # Clear previous error message
+            self.io_provider.llm_error_message = None
 
             formatted_messages = [
                 {"role": msg.get("role", "user"), "content": msg.get("content", "")}

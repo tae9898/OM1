@@ -266,9 +266,7 @@ class WebSim(Simulator):
                                 };
 
                                 ws.onmessage = (event) => {
-                                    console.log('WebSocket message received:', event.data);
                                     const data = JSON.parse(event.data);
-                                    console.log('Parsed state data:', data);
                                     setState(data);
                                 };
 
@@ -666,7 +664,7 @@ class WebSim(Simulator):
                     "current_emotion": self.state.current_emotion,
                     "system_latency": system_latency,
                     "inputs": input_rezeroed,
-                    "llm_error_message": self.io_provider.llm_error_message, # Added
+                    "llm_error_message": self.io_provider.llm_error_message,
                 }
 
             self.tick()
