@@ -600,7 +600,6 @@ class WebSim(Simulator):
             return
 
         try:
-            updated = False
             with self._lock:
                 earliest_time = self.get_earliest_time(self.io_provider.inputs)
                 logging.debug(f"earliest_time: {earliest_time}")
@@ -646,17 +645,14 @@ class WebSim(Simulator):
                         new_action = action.value
                         if new_action != self.state.current_action:
                             self.state.current_action = new_action
-                            updated = True
                     elif action.type == "speak":
                         new_speech = action.value
                         if new_speech != self.state.last_speech:
                             self.state.last_speech = new_speech
-                            updated = True
                     elif action.type == "emotion":
                         new_emotion = action.value
                         if new_emotion != self.state.current_emotion:
                             self.state.current_emotion = new_emotion
-                            updated = True
 
                 self.state_dict = {
                     "current_action": self.state.current_action,
