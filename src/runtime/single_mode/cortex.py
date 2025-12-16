@@ -499,9 +499,7 @@ class CortexRuntime:
             # if there is a prompt, send to the AIs
             output = await self.config.cortex_llm.ask(prompt)
             if output is None:
-                # Still trigger simulators to update state, even if no LLM output
                 logging.debug("No output from LLM")
-                await self.simulator_orchestrator.promise([])
                 return
 
             # Trigger the simulators

@@ -575,6 +575,9 @@ class WebSim(Simulator):
         """Update simulator state"""
         if self._initialized:
             try:
+                # Update state from IOProvider even if no actions (e.g. for errors)
+                self.sim([], broadcast=False)
+
                 # Get or create event loop
                 try:
                     loop = asyncio.get_event_loop()
@@ -593,7 +596,7 @@ class WebSim(Simulator):
 
             time.sleep(0.5)
 
-    def sim(self, actions: List[Action]) -> None:
+    def sim(self, actions: List[Action], broadcast: bool = True) -> None:
         """Handle simulation updates from commands"""
         if not self._initialized:
             logging.warning("WebSim not initialized, skipping sim update")
@@ -660,10 +663,11 @@ class WebSim(Simulator):
                     "current_emotion": self.state.current_emotion,
                     "system_latency": system_latency,
                     "inputs": input_rezeroed,
-                    "llm_error_message": self.io_provider.llm_error_message,
+                    "llm_error_message": self.io_provider.llm_error_message,  # Added
                 }
 
-            self.tick()
+            if broadcast:
+                self.tick()
 
         except Exception as e:
             logging.error(f"Error in sim update: {e}")
