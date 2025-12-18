@@ -576,7 +576,7 @@ class WebSim(Simulator):
         if self._initialized:
             try:
                 # Update state from IOProvider even if no actions (e.g. for errors)
-                self.sim([], broadcast=False)
+                self._do_sim([], broadcast=False)
 
                 # Get or create event loop
                 try:
@@ -596,8 +596,12 @@ class WebSim(Simulator):
 
             time.sleep(0.5)
 
-    def sim(self, actions: List[Action], broadcast: bool = True) -> None:
+    def sim(self, actions: List[Action]) -> None:
         """Handle simulation updates from commands"""
+        self._do_sim(actions, broadcast=True)
+
+    def _do_sim(self, actions: List[Action], broadcast: bool = True) -> None:
+        """Internal method to update simulation state"""
         if not self._initialized:
             logging.warning("WebSim not initialized, skipping sim update")
             return
@@ -670,7 +674,7 @@ class WebSim(Simulator):
                 self.tick()
 
         except Exception as e:
-            logging.error(f"Error in sim update: {e}")
+            logging.error(f"Error in _do_sim: {e}")
 
     async def cleanup(self):
         """Clean up resources"""
