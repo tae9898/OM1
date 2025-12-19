@@ -26,8 +26,7 @@ class OpenAILLM(LLM[R]):
     Parameters
     ----------
     config : LLMConfig
-        Configuration object containing API settings. If not provided, defaults
-        will be used.
+        Configuration object containing API settings.
     available_actions : list[AgentAction], optional
         List of available actions for function call generation. If provided,
         the LLM will use function calls instead of structured JSON output.
@@ -35,7 +34,7 @@ class OpenAILLM(LLM[R]):
 
     def __init__(
         self,
-        config: LLMConfig = LLMConfig(),
+        config: LLMConfig,
         available_actions: T.Optional[T.List] = None,
     ):
         """
@@ -43,7 +42,7 @@ class OpenAILLM(LLM[R]):
 
         Parameters
         ----------
-        config : LLMConfig, optional
+        config : OpenAILLMConfig, optional
             Configuration settings for the LLM.
         available_actions : list[AgentAction], optional
             List of available actions for function calling.
