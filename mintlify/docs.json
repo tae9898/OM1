@@ -45,10 +45,15 @@
                         ]
                     },
                     {
-                        "group": "Tutorials",
+                        "group": "Examples",
                         "pages": [
                             "examples/overview",
-                            "examples/conversation",
+                            "examples/conversation"
+                        ]
+                    },
+                    {
+                        "group": "Simulation Support",
+                        "pages": [
                             "examples/gazebo"
                         ]
                     },
@@ -84,6 +89,12 @@
             {
                 "tab": "Developer Cookbook",
                 "groups": [
+                    {
+                        "group": "Introduction",
+                        "pages": [
+                            "developer_cookbook/introduction"
+                        ]
+                    },
                     {
                         "group": "Input Plugins",
                         "pages": [
@@ -130,8 +141,6 @@
                     {
                         "group": "Recipes",
                         "pages": [
-
-                            "developer_cookbook/introduction",
                             "developer_cookbook/config",
                             "developer_cookbook/input",
                             "developer_cookbook/new_mode"
@@ -167,16 +176,27 @@
                     {
                         "group": "Upgrades and Announcements",
                         "pages": [
-                            "release-notes/major-updates/beta_release"
+                            "release-notes/major-updates/beta_release",
+                            "release-notes/major-updates/production_ready_release"
                         ]
                     },
-                                        {
+                    {
                         "group": "Beta Release",
                         "pages": [
                             "release-notes/beta/om",
                             "release-notes/beta/om1-avatar",
                             "release-notes/beta/unitree-sdk",
                             "release-notes/beta/video-processor"
+                        ]
+                    },
+                                        {
+                        "group": "Production Ready Release",
+                        "pages": [
+                            "release-notes/v1.0.0/om1-system-setup",
+                            "release-notes/v1.0.0/om",
+                            "release-notes/v1.0.0/om1-avatar",
+                            "release-notes/v1.0.0/unitree-sdk",
+                            "release-notes/v1.0.0/video-processor"
                         ]
                     }
                  ]
@@ -191,7 +211,7 @@
         "links": [
             {
                 "label": "Support",
-                "href": "mailto:hello@openmind.org"
+                "href": "mailto:support@openmind.org"
             }
         ],
         "primary": {

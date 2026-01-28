@@ -12,6 +12,7 @@ from backgrounds.base import Background
 from inputs import load_input
 from inputs.base import Sensor
 from llm import LLM, load_llm
+from runtime.config import validate_config_schema
 from runtime.robotics import load_unitree
 from runtime.version import verify_runtime_version
 from simulators import load_simulator
@@ -20,7 +21,48 @@ from simulators.base import Simulator
 
 @dataclass
 class RuntimeConfig:
-    """Runtime configuration for the agent."""
+    """
+    Runtime configuration for the agent.
+
+    Parameters
+    ----------
+    version : str
+        Configuration version.
+    hertz : float
+        Execution frequency.
+    name : str
+        Config name.
+    system_prompt_base : str
+        Base system prompt.
+    system_governance : str
+        Governance rules for the system.
+    system_prompt_examples : str
+        Example prompts for the system.
+    agent_inputs : List[Sensor]
+        List of agent input sensors.
+    cortex_llm : LLM
+        The main LLM for the agent.
+    simulators : List[Simulator]
+        List of simulators.
+    agent_actions : List[AgentAction]
+        List of agent actions.
+    backgrounds : List[Background]
+        List of background processes.
+    mode : Optional[str]
+        Optional mode setting.
+    api_key : Optional[str]
+        Optional API key.
+    robot_ip : Optional[str]
+        Optional robot IP address.
+    URID : Optional[str]
+        Optional unique robot identifier.
+    unitree_ethernet : Optional[str]
+        Optional Unitree ethernet port.
+    action_execution_mode : Optional[str]
+        Optional action execution mode (e.g., "concurrent", "sequential", "dependencies"). Defaults to "concurrent".
+    action_dependencies : Optional[Dict[str, List[str]]]
+        Optional mapping of action dependencies.
+    """
 
     version: str
 
@@ -36,20 +78,16 @@ class RuntimeConfig:
     agent_actions: List[AgentAction]
     backgrounds: List[Background]
 
-    # Optional robot IP address for the runtime configuration
-    robot_ip: Optional[str] = None
+    mode: Optional[str] = None
 
-    # Optional API key for the runtime configuration
     api_key: Optional[str] = None
 
-    # Optional URID robot id key for the runtime configuration
+    robot_ip: Optional[str] = None
     URID: Optional[str] = None
-
-    # Optional Ethernet adapter setting for Unitree Robots
     unitree_ethernet: Optional[str] = None
 
-    # Optional mode information for multi-mode runtime configurations
-    mode: Optional[str] = None
+    action_execution_mode: Optional[str] = None
+    action_dependencies: Optional[Dict[str, List[str]]] = None
 
     @classmethod
     def load(cls, config_name: str) -> "RuntimeConfig":
@@ -96,11 +134,17 @@ def load_config(
         else config_source_path
     )
 
-    with open(config_path, "r+") as f:
-        raw_config = json5.load(f)
+    with open(config_path, "r") as f:
+        try:
+            raw_config = json5.load(f)
+        except Exception as e:
+            raise ValueError(
+                f"Failed to parse configuration file '{config_path}': {e}"
+            ) from e
 
     config_version = raw_config.get("version")
     verify_runtime_version(config_version, config_name)
+    validate_config_schema(raw_config)
 
     g_robot_ip = raw_config.get("robot_ip", None)
     if g_robot_ip is None or g_robot_ip == "" or g_robot_ip == "192.168.0.241":
@@ -260,7 +304,6 @@ def add_meta(
     dict
         The updated runtime configuration.
     """
-
     # logging.info(f"config before {config}")
     if "api_key" not in config and g_api_key is not None:
         config["api_key"] = g_api_key
@@ -275,8 +318,21 @@ def add_meta(
     return config
 
 
-# this is for testing only
+# Dev utility to build runtime config from test case dict
 def build_runtime_config_from_test_case(config: dict) -> RuntimeConfig:
+    """
+    Build a RuntimeConfig object from a test case dictionary.
+
+    Parameters
+    ----------
+    config : dict
+        Test case configuration dictionary.
+
+    Returns
+    -------
+    RuntimeConfig
+        Constructed RuntimeConfig object.
+    """
     api_key = config.get("api_key")
     g_ut_eth = config.get("unitree_ethernet")
     g_URID = config.get("URID")
@@ -340,7 +396,7 @@ def build_runtime_config_from_test_case(config: dict) -> RuntimeConfig:
         available_actions=agent_actions,
     )
     return RuntimeConfig(
-        version=config.get("version", "v1.0.0"),  # Default version if not specified
+        version=config.get("version", "v1.0.1"),
         hertz=config.get("hertz", 1),
         name=config.get("name", "TestAgent"),
         system_prompt_base=config.get("system_prompt_base", ""),
