@@ -56,8 +56,7 @@ class WebSim(Simulator):
 
         self._initialized = False
         self._lock = threading.Lock()
-        self._last_tick = time.time()
-        self._tick_interval = 0.1  # 100ms tick rate
+        self._loop = None
 
         self.state_dict = {}
 
@@ -512,6 +511,10 @@ class WebSim(Simulator):
         """
         Run the FastAPI server.
         """
+        # Create and store event loop for broadcasting from other threads
+        self._loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(self._loop)
+
         config = uvicorn.Config(
             app=self.app,
             host="0.0.0.0",
@@ -541,7 +544,7 @@ class WebSim(Simulator):
             },
         )
         server = uvicorn.Server(config)
-        server.run()
+        self._loop.run_until_complete(server.serve())
 
     async def broadcast_state(self):
         """
@@ -584,41 +587,15 @@ class WebSim(Simulator):
         return earliest_time if earliest_time != float("inf") else 0.0
 
     def tick(self) -> None:
-        """Update simulator state."""
-        if self._initialized:
+        """Update simulator state and broadcast."""
+        if self._initialized and self._loop:
             try:
-                # Update state from IOProvider even if no actions (e.g. for errors)
                 self._do_sim([], broadcast=False)
-
-                # Get or create event loop
-                try:
-                    loop = asyncio.get_event_loop()
-                except RuntimeError:
-                    loop = asyncio.new_event_loop()
-                    asyncio.set_event_loop(loop)
-
-                try:
-                    if loop.is_running():
-                        future = asyncio.run_coroutine_threadsafe(
-                            self.broadcast_state(), loop
-                        )
-                        try:
-                            future.result(timeout=1.0)
-                        except TimeoutError:
-                            logging.warning("Websim broadcast timed out")
-                    else:
-                        loop.run_until_complete(self.broadcast_state())
-                except Exception as e:
-                    logging.warning(f"Websim tick error: {e}")
-
+                asyncio.run_coroutine_threadsafe(self.broadcast_state(), self._loop)
             except Exception as e:
                 logging.error(f"Error in tick: {e}")
 
-            self.sleep(0.5)
-
     def sim(self, actions: List[Action]) -> None:
-        """Handle simulation updates from commands"""
-        self._do_sim(actions, broadcast=True)
         """
         Handle simulation updates from commands.
 
@@ -627,6 +604,7 @@ class WebSim(Simulator):
         actions : List[Action]
             List of actions to process in the simulation.
         """
+        self._do_sim(actions, broadcast=True)
     def _do_sim(self, actions: List[Action], broadcast: bool = True) -> None:
         """Internal method to update simulation state.
         
@@ -706,8 +684,9 @@ class WebSim(Simulator):
                     "llm_error_message": self.io_provider.llm_error_message,  # Added
                 }
 
-            if broadcast:
-                self.tick()
+            if broadcast and self._loop:
+                # Fire-and-forget broadcast
+                asyncio.run_coroutine_threadsafe(self.broadcast_state(), self._loop)
 
         except Exception as e:
             logging.error(f"Error in _do_sim: {e}")
