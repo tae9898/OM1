@@ -174,6 +174,11 @@ class IOProvider:
     def fuser_system_prompt(self, value: Optional[str]) -> None:
         """
         Set the fuser system prompt.
+
+        Parameters
+        ----------
+        value : Optional[str]
+            The fuser system prompt value to set.
         """
         with self._lock:
             self._fuser_system_prompt = value
@@ -181,6 +186,11 @@ class IOProvider:
     def set_fuser_system_prompt(self, value: Optional[str]) -> None:
         """
         Alternative method to set fuser system prompt.
+
+        Parameters
+        ----------
+        value : Optional[str]
+            The fuser system prompt value to set.
         """
         with self._lock:
             self._fuser_system_prompt = value
@@ -197,6 +207,11 @@ class IOProvider:
     def fuser_inputs(self, value: Optional[str]) -> None:
         """
         Set the fuser inputs.
+
+        Parameters
+        ----------
+        value : Optional[str]
+            The fuser inputs value to set.
         """
         with self._lock:
             self._fuser_inputs = value
@@ -204,6 +219,11 @@ class IOProvider:
     def set_fuser_inputs(self, value: Optional[str]) -> None:
         """
         Alternative method to set fuser inputs.
+
+        Parameters
+        ----------
+        value : Optional[str]
+            The fuser inputs value to set.
         """
         with self._lock:
             self._fuser_inputs = value
@@ -220,6 +240,11 @@ class IOProvider:
     def fuser_available_actions(self, value: Optional[str]) -> None:
         """
         Set the fuser available actions.
+
+        Parameters
+        ----------
+        value : Optional[str]
+            The fuser available actions value to set.
         """
         with self._lock:
             self._fuser_available_actions = value
@@ -227,6 +252,11 @@ class IOProvider:
     def set_fuser_available_actions(self, value: Optional[str]) -> None:
         """
         Alternative method to set fuser available actions.
+
+        Parameters
+        ----------
+        value : Optional[str]
+            The fuser available actions value to set.
         """
         with self._lock:
             self._fuser_available_actions = value
@@ -243,6 +273,11 @@ class IOProvider:
     def fuser_start_time(self, value: Optional[float]) -> None:
         """
         Set the fuser start time.
+
+        Parameters
+        ----------
+        value : Optional[float]
+            The fuser start time value to set.
         """
         with self._lock:
             self._fuser_start_time = value
@@ -250,6 +285,11 @@ class IOProvider:
     def set_fuser_start_time(self, value: Optional[float]) -> None:
         """
         Alternative method to set fuser start time.
+
+        Parameters
+        ----------
+        value : Optional[float]
+            The fuser start time value to set.
         """
         with self._lock:
             self._fuser_start_time = value
@@ -266,6 +306,11 @@ class IOProvider:
     def fuser_end_time(self, value: Optional[float]) -> None:
         """
         Set the fuser end time.
+
+        Parameters
+        ----------
+        value : Optional[float]
+            The fuser end time value to set.
         """
         with self._lock:
             self._fuser_end_time = value
@@ -273,6 +318,11 @@ class IOProvider:
     def set_fuser_end_time(self, value: Optional[float]) -> None:
         """
         Alternative method to set fuser end time.
+
+        Parameters
+        ----------
+        value : Optional[float]
+            The fuser end time value to set.
         """
         with self._lock:
             self._fuser_end_time = value
@@ -289,6 +339,11 @@ class IOProvider:
     def llm_prompt(self, value: Optional[str]) -> None:
         """
         Set the LLM prompt.
+
+        Parameters
+        ----------
+        value : Optional[str]
+            The LLM prompt value to set.
         """
         with self._lock:
             self._llm_prompt = value
@@ -296,6 +351,11 @@ class IOProvider:
     def set_llm_prompt(self, value: Optional[str]) -> None:
         """
         Alternative method to set LLM prompt.
+
+        Parameters
+        ----------
+        value : Optional[str]
+            The LLM prompt value to set.
         """
         with self._lock:
             self._llm_prompt = value
@@ -317,6 +377,11 @@ class IOProvider:
     def llm_start_time(self, value: Optional[float]) -> None:
         """
         Set the LLM processing start time.
+
+        Parameters
+        ----------
+        value : Optional[float]
+            The LLM start time value to set.
         """
         with self._lock:
             self._llm_start_time = value
@@ -324,6 +389,11 @@ class IOProvider:
     def set_llm_start_time(self, value: Optional[float]) -> None:
         """
         Alternative method to set LLM start time.
+
+        Parameters
+        ----------
+        value : Optional[float]
+            The LLM start time value to set.
         """
         with self._lock:
             self._llm_start_time = value
@@ -340,6 +410,11 @@ class IOProvider:
     def llm_end_time(self, value: Optional[float]) -> None:
         """
         Set the LLM processing end time.
+
+        Parameters
+        ----------
+        value : Optional[float]
+            The LLM end time value to set.
         """
         with self._lock:
             self._llm_end_time = value
